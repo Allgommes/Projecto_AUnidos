@@ -142,6 +142,20 @@
 
     <!-- Main Content -->
     <div class="content">
+        <div class="container mt-3">
+            <?php if (hasFlash('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2"></i><?php echo e(getFlash('success')); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            <?php if (hasFlash('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i><?php echo e(getFlash('error')); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+        </div>
         <?php echo $content ?? ''; ?>
     </div>
 

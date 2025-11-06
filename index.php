@@ -22,7 +22,7 @@ try {
     $educadoresDestaque = [];
 }
 
-ob_start();
+ob_start(); // ob_start buffering
 ?>
 
 <div class="hero">

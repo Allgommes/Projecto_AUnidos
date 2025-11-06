@@ -6,6 +6,8 @@
 
 // Carregar o autoloader do Composer e configurações
 require_once __DIR__ . '/config/database.php';
+// Carregar helpers globais
+require_once __DIR__ . '/app/Helpers/functions.php';
 
 // Timezone padrão
 date_default_timezone_set('Europe/Lisbon');

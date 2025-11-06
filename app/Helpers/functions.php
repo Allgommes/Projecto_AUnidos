@@ -47,10 +47,29 @@ function e($string) {
 }
 
 /**
+ * Sanitiza entrada simples (strings)
+ */
+function sanitizeInput($value) {
+    if (is_null($value)) return '';
+    if (is_string($value)) {
+        return trim(filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+    }
+    return $value;
+}
+
+/**
  * Verifica se o usuário está autenticado
  */
 function isAuthenticated() {
     return isset($_SESSION['user_id']);
+}
+
+// Backwards-compat wrappers used by legacy files
+function isLoggedIn() {
+    return isAuthenticated();
+}
+function getUserType() {
+    return authUserType();
 }
 
 /**
@@ -129,7 +148,24 @@ function formatDateTime($datetime, $format = 'd/m/Y H:i') {
  * Retorna o valor antigo de um campo de formulário (útil após validação)
  */
 function old($key, $default = '') {
-    return $_POST[$key] ?? $default;
+    if (isset($_SESSION['old']) && array_key_exists($key, $_SESSION['old'])) {
+        return e($_SESSION['old'][$key]);
+    }
+    return e($_POST[$key] ?? $default);
+}
+
+/**
+ * Guarda dados antigos do formulário para repopular após redirect
+ */
+function setOld(array $data) {
+    $_SESSION['old'] = $data;
+}
+
+/**
+ * Limpa dados antigos do formulário
+ */
+function clearOld() {
+    unset($_SESSION['old']);
 }
 
 /**

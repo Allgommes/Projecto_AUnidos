@@ -5,8 +5,6 @@ $distritos = $distritos ?? [
     'Évora', 'Faro', 'Guarda', 'Leiria', 'Lisboa', 'Portalegre',
     'Porto', 'Santarém', 'Setúbal', 'Viana do Castelo', 'Vila Real', 'Viseu'
 ];
-
-ob_start();
 ?>
 
 <div class="container py-5">
@@ -128,7 +126,3 @@ function selectUserType(type) {
 }
 </style>
 
-<?php
-$content = ob_get_clean();
-require __DIR__ . '/../layouts/main.php';
-?>

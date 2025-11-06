@@ -1,10 +1,14 @@
 <?php
-require_once 'config/database.php';
-require_once 'src/classes/User.php';
+require_once __DIR__ . '/bootstrap.php';
 
-$user = new User();
-$user->logout();
+// Encerrar sessão de forma segura
+$_SESSION = [];
+if (ini_get('session.use_cookies')) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+}
+session_destroy();
 
-$_SESSION['success_message'] = 'Logout efetuado com sucesso!';
-redirect(SITE_URL . '/login.php');
+setFlash('success', 'Logout efetuado com sucesso!');
+redirect('login.php');
 ?>

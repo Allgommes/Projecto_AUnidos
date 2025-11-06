@@ -1,5 +1,5 @@
 <?php
-require_once 'config/database.php';
+require_once __DIR__ . '/bootstrap.php';
 
 // Verificar se está logado e é educador
 if (!isLoggedIn() || getUserType() !== 'educador') {

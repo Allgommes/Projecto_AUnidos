@@ -1,137 +1,271 @@
-# 🐕 AUnidos - Marketplace de Educadores Caninos
+# 🐕 AUnidos - Plataforma de Educação Canina# 🐕 AUnidos - Marketplace de Educadores Caninos
 
-> Plataforma web que conecta donos de cães com educadores caninos profissionais em Portugal.
 
-## 🚀 Funcionalidades
 
-- ✅ **Sistema de Autenticação** completo (registo, login, verificação de email)
-- ✅ **Perfis de Utilizadores** (donos e educadores) com upload de fotos
-- ✅ **Sistema de Busca Avançado** com filtros por localização, especialidade, preço e avaliações
-- ✅ **Gestão de Serviços** para educadores criarem e gerirem ofertas
-- ✅ **Interface Responsiva** moderna com Bootstrap 5.3
-- ✅ **Sistema de Avaliações** e comentários
-- ✅ **Dashboard Personalizado** por tipo de utilizador
+Plataforma simples que conecta donos de cães a educadores caninos em Portugal.> Plataforma web que conecta donos de cães com educadores caninos profissionais em Portugal.
+
+
+
+## 📋 Funcionalidades Principais## 🚀 Funcionalidades
+
+
+
+✅ **Registo de Utilizadores** - Donos e Educadores  - ✅ **Sistema de Autenticação** completo (registo, login, verificação de email)
+
+✅ **Verificação de Email** - Confirmação por email  - ✅ **Perfis de Utilizadores** (donos e educadores) com upload de fotos
+
+✅ **Login Seguro** - Autenticação com sessão  - ✅ **Sistema de Busca Avançado** com filtros por localização, especialidade, preço e avaliações
+
+✅ **Recuperação de Password** - Reset via email  - ✅ **Gestão de Serviços** para educadores criarem e gerirem ofertas
+
+✅ **Dashboard** - Painel de controlo básico  - ✅ **Interface Responsiva** moderna com Bootstrap 5.3
+
+✅ **Busca de Educadores** - Pesquisa por distrito  - ✅ **Sistema de Avaliações** e comentários
+
+✅ **Perfil de Utilizador** - Gestão de dados pessoais  - ✅ **Dashboard Personalizado** por tipo de utilizador
+
 - ✅ **Notificações por Email** com PHPMailer
+
+## 🚀 Instalação Rápida
 
 ## 📋 Requisitos
 
-- **PHP** 8.0 ou superior
-- **MySQL** 5.7 ou superior
-- **Servidor Web** (Apache/Nginx)
+### 1. Requisitos
+
+- XAMPP (Apache + MySQL + PHP 7.4+)- **PHP** 8.0 ou superior
+
+- Composer- **MySQL** 5.7 ou superior
+
+- Conta Gmail (para envio de emails)- **Servidor Web** (Apache/Nginx)
+
 - **Extensões PHP**: PDO, MySQLi, mail, mbstring, gd
 
+### 2. Setup do Projeto
+
 ### Para XAMPP:
-- XAMPP 8.0 ou superior (já inclui tudo necessário)
 
-## 📥 Instalação
+```powershell- XAMPP 8.0 ou superior (já inclui tudo necessário)
 
-### 1. Clone o Repositório
-```bash
+# Clone ou baixe o projeto para c:\xampp\htdocs\
+
+cd C:\xampp\htdocs\Projecto_AUnidos## 📥 Instalação
+
+
+
+# Instalar dependências### 1. Clone o Repositório
+
+composer install```bash
+
 git clone https://github.com/Allgommes/Projecto_AUnidos.git
-cd Projecto_AUnidos
-```
+
+# Configurar .envcd Projecto_AUnidos
+
+copy .env.example .env```
+
+# Edite o .env com suas configurações
 
 ### 2. Configure a Base de Dados
-```bash
-# Copie o ficheiro de configuração
-cp config/database.example.php config/database.php
+
+# Criar banco de dados```bash
+
+& "C:\xampp\mysql\bin\mysql.exe" -u root -e "CREATE DATABASE IF NOT EXISTS aunidos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"# Copie o ficheiro de configuração
+
+& "C:\xampp\mysql\bin\mysql.exe" -u root aunidos -e "source sql/schema.sql"cp config/database.example.php config/database.php
+
+```
 
 # Edite as credenciais da base de dados
-nano config/database.php
+
+### 3. Configurar Email (.env)nano config/database.php
+
 ```
 
-### 3. Crie a Base de Dados
-```sql
--- No MySQL/phpMyAdmin:
-CREATE DATABASE aunidos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
+```env
 
-### 4. Execute o Schema SQL
+SMTP_HOST=smtp.gmail.com### 3. Crie a Base de Dados
+
+SMTP_PORT=587```sql
+
+SMTP_USERNAME=seu-email@gmail.com-- No MySQL/phpMyAdmin:
+
+SMTP_PASSWORD=sua-app-passwordCREATE DATABASE aunidos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+MAIL_FROM_ADDRESS=noreply@aunidos.pt```
+
+MAIL_FROM_NAME=AUnidos
+
+```### 4. Execute o Schema SQL
+
 ```bash
-# Importe a estrutura das tabelas
-mysql -u root -p aunidos < sql/schema.sql
 
-# Ou use phpMyAdmin para importar sql/schema.sql
-```
+**Como obter App Password do Gmail:**# Importe a estrutura das tabelas
 
-### 5. Configure Permissões (Linux/Mac)
+1. https://myaccount.google.com/securitymysql -u root -p aunidos < sql/schema.sql
+
+2. Ativar "Verificação em 2 passos"
+
+3. Criar "Senha de app" para Email# Ou use phpMyAdmin para importar sql/schema.sql
+
+4. Colar no `.env````
+
+
+
+### 4. Acessar### 5. Configure Permissões (Linux/Mac)
+
 ```bash
-chmod 755 uploads/
-chmod 755 uploads/perfis/
-```
 
-### 6. Dados de Teste (Opcional)
+```chmod 755 uploads/
+
+http://localhost/Projecto_AUnidoschmod 755 uploads/perfis/
+
+``````
+
+
+
+## 📁 Estrutura do Projeto### 6. Dados de Teste (Opcional)
+
 ```bash
-php inserir-dados-teste.php
+
+```php inserir-dados-teste.php
+
+Projecto_AUnidos/```
+
+├── index.php              # Página inicial
+
+├── register.php           # Registo de utilizadores## ⚙️ Configuração
+
+├── login.php              # Autenticação
+
+├── verify-email.php       # Verificação de email### Configuração da Base de Dados
+
+├── forgot-password.php    # Solicitar reset de passwordEdite `config/database.php`:
+
+├── reset-password.php     # Redefinir password
+
+├── dashboard.php          # Dashboard do utilizador```php
+
+├── logout.php             # Terminar sessãodefine('DB_HOST', 'localhost');
+
+├── perfil.php             # Editar perfildefine('DB_NAME', 'aunidos');
+
+├── buscar-educadores.php  # Buscar educadoresdefine('DB_USER', 'root');
+
+├── educador.php           # Perfil público do educadordefine('DB_PASS', '');
+
+├── meus-servicos.php      # Gestão de serviços (educador)```
+
+├── bootstrap.php          # Bootstrap da aplicação
+
+│### Configuração de Email
+
+├── app/Para emails funcionarem, configure no `config/database.php`:
+
+│   ├── Helpers/
+
+│   │   └── functions.php  # Funções auxiliares```php
+
+│   ├── Models/define('SMTP_HOST', 'smtp.gmail.com');
+
+│   │   └── User.php       # Model de utilizadordefine('SMTP_USERNAME', 'seu-email@gmail.com');
+
+│   └── Services/define('SMTP_PASSWORD', 'sua-app-password');
+
+│       └── EmailService.php # Envio de emails```
+
+│
+
+├── config/**Para Gmail:**
+
+│   └── database.php       # Configuração DB1. Ative autenticação de 2 fatores
+
+│2. Gere uma "App Password" 
+
+├── resources/views/3. Use essa password no SMTP_PASSWORD
+
+│   ├── auth/              # Views de autenticação
+
+│   └── layouts/           # Layouts (main.php)## 🧪 Teste
+
+│
+
+├── sql/### Dados de Teste Incluídos:
+
+│   └── schema.sql         # Estrutura da BD- **Email**: `email@aunidos.pt`
+
+│- **Password**: `123456`
+
+└── vendor/                # Dependências do Composer- **3 Educadores** criados com perfis completos
+
 ```
-
-## ⚙️ Configuração
-
-### Configuração da Base de Dados
-Edite `config/database.php`:
-
-```php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'aunidos');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-```
-
-### Configuração de Email
-Para emails funcionarem, configure no `config/database.php`:
-
-```php
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_USERNAME', 'seu-email@gmail.com');
-define('SMTP_PASSWORD', 'sua-app-password');
-```
-
-**Para Gmail:**
-1. Ative autenticação de 2 fatores
-2. Gere uma "App Password" 
-3. Use essa password no SMTP_PASSWORD
-
-## 🧪 Teste
-
-### Dados de Teste Incluídos:
-- **Email**: `email@aunidos.pt`
-- **Password**: `123456`
-- **3 Educadores** criados com perfis completos
 
 ### Página de Testes:
-Acesse `http://localhost/Projecto_AUnidos/teste-navegacao.php`
 
-## 📁 Estrutura do Projeto
+## 🧪 TestarAcesse `http://localhost/Projecto_AUnidos/teste-navegacao.php`
 
-```
-Projecto_AUnidos/
-├── config/
+
+
+### Criar Conta## 📁 Estrutura do Projeto
+
+1. Acesse: http://localhost/Projecto_AUnidos/register.php
+
+2. Preencha os dados```
+
+3. Verifique o email recebidoProjecto_AUnidos/
+
+4. Clique no link de verificação├── config/
+
 │   ├── database.php              # Configurações da BD
-│   └── database.example.php      # Exemplo de configuração
-├── includes/
-│   ├── header.php               # Cabeçalho comum
+
+### Fazer Login│   └── database.example.php      # Exemplo de configuração
+
+1. Acesse: http://localhost/Projecto_AUnidos/login.php├── includes/
+
+2. Use as credenciais criadas│   ├── header.php               # Cabeçalho comum
+
 │   └── footer.php               # Rodapé comum
-├── src/
-│   └── classes/
-│       ├── User.php             # Gestão de utilizadores
-│       └── EmailService.php     # Serviços de email
-├── public/
+
+### Recuperar Password├── src/
+
+1. Acesse: http://localhost/Projecto_AUnidos/forgot-password.php│   └── classes/
+
+2. Insira o email│       ├── User.php             # Gestão de utilizadores
+
+3. Verifique o email recebido│       └── EmailService.php     # Serviços de email
+
+4. Clique no link e defina nova password├── public/
+
 │   ├── css/
-│   └── js/
+
+## 🛠️ Tecnologias│   └── js/
+
 ├── uploads/                     # Uploads de utilizadores
-├── sql/
-│   └── schema.sql              # Estrutura da BD
-├── PHPMailer/                  # Biblioteca de email
-├── index.php                   # Página inicial
-├── login.php                   # Sistema de login
+
+- **Backend:** PHP 7.4+├── sql/
+
+- **Frontend:** HTML5, Bootstrap 5, Bootstrap Icons│   └── schema.sql              # Estrutura da BD
+
+- **Database:** MySQL├── PHPMailer/                  # Biblioteca de email
+
+- **Email:** PHPMailer├── index.php                   # Página inicial
+
+- **Dependências:** Composer (vlucas/phpdotenv)├── login.php                   # Sistema de login
+
 ├── register.php                # Registo de utilizadores
-├── dashboard.php               # Dashboard do utilizador
+
+## 📝 Licença├── dashboard.php               # Dashboard do utilizador
+
 ├── buscar-educadores.php       # Busca de educadores
-├── educador.php                # Perfil público do educador
+
+MIT License - Projeto académico├── educador.php                # Perfil público do educador
+
 ├── perfil.php                  # Edição de perfil
-├── meus-servicos.php           # Gestão de serviços
+
+---├── meus-servicos.php           # Gestão de serviços
+
 └── README.md                   # Este ficheiro
-```
+
+**Desenvolvido para a escola** 🎓```
+
 
 ## 🎯 Como Usar
 

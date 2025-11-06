@@ -1,6 +1,5 @@
 <?php
 $pageTitle = 'Login - AUnidos';
-ob_start();
 ?>
 
 <div class="container py-5">
@@ -52,7 +51,3 @@ ob_start();
     </div>
 </div>
 
-<?php
-$content = ob_get_clean();
-require __DIR__ . '/../layouts/main.php';
-?>

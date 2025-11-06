@@ -25,12 +25,12 @@ function enviar_email($destinatario, $nome_destinatario, $assunto, $mensagem)
     try {
         // Configurações do servidor - CORREÇÃO: Adicionar opções SSL
         $mail->isSMTP();
-        $mail->Host       = 'smtp.sapo.pt';
+        $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'gomesme_meting@sapo.pt';
-        $mail->Password   = '5Pz6jqfOr$3C';
+        $mail->Username   = 'gomesalvarogomes@gmail.com';
+        $mail->Password   = 'mgtz foyz hsne xckb';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $mail->Port       = 465;
+        $mail->Port       = 587;
 
         // CORREÇÃO: Adicionar opções SSL para evitar problemas de certificado
         $mail->SMTPOptions = array(
@@ -42,7 +42,7 @@ function enviar_email($destinatario, $nome_destinatario, $assunto, $mensagem)
         );
 
         // Remetente e destinatário
-        $mail->setFrom('gomesme_meting@sapo.pt', 'AUnidos');
+        $mail->setFrom('gomesalvarogomes@gmail.com', 'AUnidos');
         $mail->addAddress($destinatario, $nome_destinatario);
 
 $mail->send();

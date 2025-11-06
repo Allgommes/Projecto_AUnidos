@@ -297,6 +297,16 @@ http://localhost/Projecto_AUnidos
    - Preencha o formulário e crie uma conta
    - Escolha "Dono de Cão" ou "Educador Canino"
    - Se o email estiver configurado, receberá um email de verificação
+   
+    Observações:
+    - Em GET (acesso pelo navegador), o `register.php` renderiza o formulário.
+    - Em POST (envio do formulário), valida os campos e cria o utilizador com mensagens de feedback (flash) e redirecionamento.
+    - Também aceita `application/json` (API). Exemplo de criação via PowerShell:
+
+      ```powershell
+      $json = '{"nome":"Maria Teste","email":"maria.teste@example.com","password":"senha123","tipo_utilizador":"dono","distrito":"Lisboa"}'
+      Invoke-RestMethod -Uri "http://localhost/Projecto_AUnidos/register.php" -Method Post -Body $json -ContentType "application/json; charset=utf-8" | ConvertTo-Json
+      ```
 
 #### 3. **Login**
    - URL: `http://localhost/Projecto_AUnidos/login.php`

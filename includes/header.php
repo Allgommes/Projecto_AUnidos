@@ -1,3 +1,4 @@
+<?php if (!function_exists('isLoggedIn')) { require_once __DIR__ . '/../bootstrap.php'; } ?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
