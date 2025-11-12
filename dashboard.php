@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/bootstrap.php';
 
-// Verificar se está logado
+// Verificar se estÃ¡ logado
 if (!isLoggedIn()) {
     redirect(SITE_URL . '/login.php');
 }
@@ -24,7 +24,7 @@ try {
         $stmt->execute([$userId]);
         $perfil = $stmt->fetch();
         
-        // Estatísticas do educador
+        // EstatÃ­sticas do educador
         $stmt = $db->prepare("
             SELECT 
                 COUNT(*) as total_servicos
@@ -69,7 +69,7 @@ try {
         $stmt->execute([$perfil['id']]);
         $agendamentos = $stmt->fetchAll();
         
-        // Avaliações recentes
+        // AvaliaÃ§Ãµes recentes
         $stmt = $db->prepare("
             SELECT 
                 av.nota,
@@ -119,7 +119,7 @@ try {
         $stmt->execute([$perfil['id']]);
         $agendamentos = $stmt->fetchAll();
         
-        // Estatísticas do dono
+        // EstatÃ­sticas do dono
         $stmt = $db->prepare("
             SELECT 
                 COUNT(*) as total_agendamentos,
@@ -132,7 +132,7 @@ try {
         $stats['agendamentos'] = $agendamentosStats['total_agendamentos'];
         $stats['concluidos'] = $agendamentosStats['concluidos'];
         
-        // Cães do dono
+        // CÃ£es do dono
         $stmt = $db->prepare("
             SELECT COUNT(*) as total_caes
             FROM caes 
@@ -140,6 +140,35 @@ try {
         ");
         $stmt->execute([$perfil['id']]);
         $stats['caes'] = $stmt->fetch()['total_caes'];
+    }
+    
+    // CORREÃ‡ÃƒO 4: Buscar 3 educadores em destaque para mostrar no dashboard
+    $educadoresDestaque = [];
+    try {
+        $stmt = $db->prepare("
+            SELECT 
+                e.id, 
+                e.anos_experiencia, 
+                e.biografia, 
+                e.foto_perfil,
+                e.avaliacao_media,
+                e.total_avaliacoes,
+                u.nome, 
+                u.distrito,
+                GROUP_CONCAT(esp.nome SEPARATOR ', ') as especialidades
+            FROM educadores e
+            JOIN utilizadores u ON e.utilizador_id = u.id
+            LEFT JOIN educador_especialidades ee ON e.id = ee.educador_id
+            LEFT JOIN especialidades esp ON ee.especialidade_id = esp.id
+            WHERE e.aprovado = 1 AND u.ativo = 1
+            GROUP BY e.id
+            ORDER BY e.avaliacao_media DESC, e.total_avaliacoes DESC
+            LIMIT 3
+        ");
+        $stmt->execute();
+        $educadoresDestaque = $stmt->fetchAll();
+    } catch (Exception $e) {
+        error_log("Erro ao buscar educadores destaque: " . $e->getMessage());
     }
     
 } catch (Exception $e) {
@@ -171,16 +200,16 @@ include 'includes/header.php';
         </div>
     </div>
     
-    <!-- Aviso de email não verificado -->
+    <!-- Aviso de email nÃ£o verificado -->
     <?php if (!$_SESSION['email_verified']): ?>
     <div class="alert alert-warning">
         <i class="bi bi-exclamation-triangle me-2"></i>
         <strong>Email não verificado!</strong> 
-        Verifique a sua caixa de email e clique no link de verificação para ativar todas as funcionalidades.
+        Verifique a sua caixa de email e clique no link de verificão para ativar todas as funcionalidades.
     </div>
     <?php endif; ?>
     
-    <!-- Estatísticas -->
+    <!-- EstatÃ­sticas -->
     <div class="row mb-4">
         <?php if ($userType === 'educador'): ?>
             <div class="col-lg-3 col-md-6 mb-3">
@@ -230,7 +259,7 @@ include 'includes/header.php';
                 <div class="stats-card text-center">
                     <i class="bi bi-heart-fill display-4 text-danger mb-2"></i>
                     <div class="stats-number"><?php echo $stats['caes'] ?? 0; ?></div>
-                    <h6>Cães Registados</h6>
+                    <h6>CÃ£es Registados</h6>
                 </div>
             </div>
         <?php endif; ?>
@@ -267,7 +296,7 @@ include 'includes/header.php';
                                     <tr>
                                         <th>Data/Hora</th>
                                         <th><?php echo $userType === 'educador' ? 'Cliente' : 'Educador'; ?></th>
-                                        <th>Serviço</th>
+                                        <th>ServiÃ§o</th>
                                         <th>Status</th>
                                         <th>Valor</th>
                                     </tr>
@@ -305,7 +334,7 @@ include 'includes/header.php';
                                                 'pendente' => 'Pendente',
                                                 'confirmado' => 'Confirmado',
                                                 'em_andamento' => 'Em Andamento',
-                                                'concluido' => 'Concluído',
+                                                'concluido' => 'ConcluÃ­do',
                                                 'cancelado' => 'Cancelado'
                                             ];
                                             ?>
@@ -313,7 +342,7 @@ include 'includes/header.php';
                                                 <?php echo $statusText[$agendamento['status']] ?? $agendamento['status']; ?>
                                             </span>
                                         </td>
-                                        <td>€<?php echo number_format($agendamento['preco'], 2); ?></td>
+                                        <td>â‚¬<?php echo number_format($agendamento['preco'], 2); ?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -326,7 +355,7 @@ include 'includes/header.php';
         
         <!-- Sidebar -->
         <div class="col-lg-4">
-            <!-- Ações Rápidas -->
+            <!-- AÃ§Ãµes RÃ¡pidas -->
             <div class="card mb-4">
                 <div class="card-header">
                     <h6 class="mb-0">
@@ -373,6 +402,8 @@ include 'includes/header.php';
                     </h6>
                 </div>
                 <div class="card-body">
+                    <?php if ($perfil): ?>
+                    <!-- CORREÃ‡ÃƒO: Adicionada verificaÃ§Ã£o para evitar erro "array offset on null" -->
                     <div class="text-center mb-3">
                         <img src="<?php echo $perfil['foto_perfil'] ? UPLOAD_URL . 'perfis/' . $perfil['foto_perfil'] : 'https://via.placeholder.com/80'; ?>" 
                              alt="Foto de perfil" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
@@ -381,6 +412,13 @@ include 'includes/header.php';
                     <p class="text-center text-muted small">
                         <i class="bi bi-geo-alt me-1"></i><?php echo htmlspecialchars($perfil['distrito']); ?>
                     </p>
+                    <?php else: ?>
+                    <!-- Fallback caso perfil nÃ£o seja carregado -->
+                    <div class="alert alert-warning text-center">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <p class="mb-0">Erro ao carregar perfil. Tente recarregar a página.</p>
+                    </div>
+                    <?php endif; ?>
                     
                     <?php if ($userType === 'educador'): ?>
                     <div class="text-center">
@@ -410,7 +448,7 @@ include 'includes/header.php';
                 </div>
             </div>
             
-            <!-- Avaliações Recentes (apenas para educadores) -->
+            <!-- AvaliaÃ§Ãµes Recentes (apenas para educadores) -->
             <?php if ($userType === 'educador' && !empty($avaliacoes)): ?>
             <div class="card">
                 <div class="card-header">
@@ -442,6 +480,113 @@ include 'includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+    
+    <!-- CORREÇÃO 4: Seção Educadores em Destaque com Fotos -->
+    <?php if (!empty($educadoresDestaque)): ?>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-award me-2"></i>Educadores em Destaque</h5>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filtroEspecialidadesModal">
+                        <i class="bi bi-funnel me-2"></i>Filtrar por Especialidade
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <?php foreach ($educadoresDestaque as $educador): ?>
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <img src="<?php echo $educador['foto_perfil'] ? UPLOAD_URL . 'perfis/' . $educador['foto_perfil'] : 'https://ui-avatars.com/api/?name=' . urlencode($educador['nome']) . '&size=120&background=4CAF50&color=fff'; ?>" 
+                                         alt="<?php echo htmlspecialchars($educador['nome']); ?>" 
+                                         class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                                    <h6 class="fw-bold"><?php echo htmlspecialchars($educador['nome']); ?></h6>
+                                    <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i><?php echo htmlspecialchars($educador['distrito']); ?></p>
+                                    <div class="mb-2">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <?php if ($i <= $educador['avaliacao_media']): ?>
+                                                <i class="bi bi-star-fill text-warning"></i>
+                                            <?php else: ?>
+                                                <i class="bi bi-star text-muted"></i>
+                                            <?php endif; ?>
+                                        <?php endfor; ?>
+                                        <small class="text-muted">(<?php echo $educador['total_avaliacoes']; ?>)</small>
+                                    </div>
+                                    <p class="small text-muted mb-2"><i class="bi bi-calendar-check me-1"></i><?php echo $educador['anos_experiencia']; ?> anos</p>
+                                    <?php if ($educador['especialidades']): ?>
+                                    <div class="mb-3">
+                                        <?php foreach (explode(', ', $educador['especialidades']) as $esp): ?>
+                                            <span class="badge bg-primary me-1"><?php echo htmlspecialchars($esp); ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php endif; ?>
+                                    <p class="small text-muted mb-3" style="min-height: 60px;">
+                                        <?php echo htmlspecialchars(substr($educador['biografia'], 0, 100)) . '...'; ?>
+                                    </p>
+                                    <a href="educador.php?id=<?php echo $educador['id']; ?>" class="btn btn-primary btn-sm w-100">
+                                        <i class="bi bi-eye me-2"></i>Ver Perfil
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="buscar-educadores.php" class="btn btn-outline-primary">
+                            <i class="bi bi-search me-2"></i>Ver Todos os Educadores
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
+
+<!-- CORREÇÃO 4: Modal de Filtro por Especialidades -->
+<div class="modal fade" id="filtroEspecialidadesModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-funnel me-2"></i>Filtrar por Especialidade</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Selecione a especialidade desejada:</p>
+                <div class="list-group">
+                    <a href="buscar-educadores.php?especialidade=Obediência Básica" class="list-group-item list-group-item-action">
+                        <i class="bi bi-check-circle me-2 text-primary"></i>Obediência Básica
+                    </a>
+                    <a href="buscar-educadores.php?especialidade=Obediência Avançada" class="list-group-item list-group-item-action">
+                        <i class="bi bi-award me-2 text-success"></i>Obediência Avançada
+                    </a>
+                    <a href="buscar-educadores.php?especialidade=Agility" class="list-group-item list-group-item-action">
+                        <i class="bi bi-lightning me-2 text-warning"></i>Agility
+                    </a>
+                    <a href="buscar-educadores.php?especialidade=Guarda" class="list-group-item list-group-item-action">
+                        <i class="bi bi-shield me-2 text-danger"></i>Guarda
+                    </a>
+                    <a href="buscar-educadores.php?especialidade=Treino de cães bebé" class="list-group-item list-group-item-action">
+                        <i class="bi bi-heart me-2 text-info"></i>Treino de cães bebé
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <a href="buscar-educadores.php" class="btn btn-primary">Ver Todos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <a href="buscar-educadores.php" class="btn btn-primary">Ver Todos</a>
+            </div>
         </div>
     </div>
 </div>

@@ -31,7 +31,7 @@ class EmailService {
             
             // Remetente padrão
             $this->mailer->setFrom(
-                $_ENV['MAIL_FROM_ADDRESS'] ?? 'noreply@aunidos.pt',
+                $_ENV['MAIL_FROM_ADDRESS'] ?? 'gomesalvarogomes@gmail.com',
                 $_ENV['MAIL_FROM_NAME'] ?? 'AUnidos'
             );
             
@@ -126,10 +126,10 @@ class EmailService {
     /**
      * Enviar notificação de agendamento
      */
-    public function sendAgendamentoNotification($agendamentoId) {
+  /*  public function sendAgendamentoNotification($agendamentoId) {
         try {
-            $agendamentoModel = new \App\Models\Agendamento();
-            $agendamento = $agendamentoModel->getById($agendamentoId);
+            //$agendamentoModel = new \App\Models\Agendamento();
+           // $agendamento = $agendamentoModel->getById($agendamentoId);
             
             if (!$agendamento) {
                 return false;

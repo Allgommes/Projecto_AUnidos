@@ -34,15 +34,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['foto_perfil'])) {
                 try {
                     $db = getDB();
                     
-                    // Atualizar na tabela correta baseado no tipo de utilizador
+                    // CORREÇÃO: Apenas educadores têm campo foto_perfil na BD
+                    // Tabela 'donos' não possui este campo (apenas id e utilizador_id)
                     if ($userType === 'educador') {
                         $stmt = $db->prepare("UPDATE educadores SET foto_perfil = ? WHERE utilizador_id = ?");
+                        $stmt->execute([$filename, $userId]);
+                        $_SESSION['success_message'] = 'Foto atualizada com sucesso!';
                     } else {
-                        $stmt = $db->prepare("UPDATE donos SET foto_perfil = ? WHERE utilizador_id = ?");
+                        // REMOVIDO: UPDATE donos SET foto_perfil (campo não existe)
+                        // Donos usam apenas placeholder para foto
+                        $_SESSION['success_message'] = 'Upload realizado! (Donos não possuem foto de perfil na BD)';
                     }
-                    
-                    $stmt->execute([$filename, $userId]);
-                    $_SESSION['success_message'] = 'Foto atualizada com sucesso!';
                     
                 } catch (Exception $e) {
                     error_log("Erro ao atualizar foto: " . $e->getMessage());
@@ -76,19 +78,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_FILES['foto_perfil'])) {
         ]);
         
         if ($userType === 'educador') {
-            // Atualizar dados específicos do educador
+            // CORREÇÃO: Removidos campos preco_minimo e preco_maximo (não existem na tabela educadores)
+            // Campos disponíveis: utilizador_id, biografia, anos_experiencia, certificacoes, foto_perfil, aprovado, avaliacao_media, total_avaliacoes
             $stmt = $db->prepare("
                 UPDATE educadores 
-                SET anos_experiencia = ?, biografia = ?, certificacoes = ?, 
-                    preco_minimo = ?, preco_maximo = ?
+                SET anos_experiencia = ?, biografia = ?, certificacoes = ?
                 WHERE utilizador_id = ?
             ");
             $stmt->execute([
-                $_POST['anos_experiencia'],
-                $_POST['biografia'],
-                $_POST['certificacoes'],
-                $_POST['preco_minimo'],
-                $_POST['preco_maximo'],
+                $_POST['anos_experiencia'] ?? 0,
+                $_POST['biografia'] ?? '',
+                $_POST['certificacoes'] ?? '',
+                // REMOVIDO: $_POST['preco_minimo'], $_POST['preco_maximo']
                 $userId
             ]);
             
