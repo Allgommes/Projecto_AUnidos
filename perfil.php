@@ -34,17 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['foto_perfil'])) {
                 try {
                     $db = getDB();
                     
-                    // CORREÇÃO: Apenas educadores têm campo foto_perfil na BD
-                    // Tabela 'donos' não possui este campo (apenas id e utilizador_id)
+                    // Atualizar foto para educador ou dono (coluna adicionada via migration)
                     if ($userType === 'educador') {
                         $stmt = $db->prepare("UPDATE educadores SET foto_perfil = ? WHERE utilizador_id = ?");
-                        $stmt->execute([$filename, $userId]);
-                        $_SESSION['success_message'] = 'Foto atualizada com sucesso!';
                     } else {
-                        // REMOVIDO: UPDATE donos SET foto_perfil (campo não existe)
-                        // Donos usam apenas placeholder para foto
-                        $_SESSION['success_message'] = 'Upload realizado! (Donos não possuem foto de perfil na BD)';
+                        $stmt = $db->prepare("UPDATE donos SET foto_perfil = ? WHERE utilizador_id = ?");
                     }
+                    $stmt->execute([$filename, $userId]);
+                    $_SESSION['success_message'] = 'Foto atualizada com sucesso!';
                     
                 } catch (Exception $e) {
                     error_log("Erro ao atualizar foto: " . $e->getMessage());
@@ -94,7 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_FILES['foto_perfil'])) {
             ]);
             
             // Atualizar especialidades
-            $educadorId = $db->query("SELECT id FROM educadores WHERE utilizador_id = $userId")->fetch()['id'];
+            $stmt = $db->prepare("SELECT id FROM educadores WHERE utilizador_id = ?");
+            $stmt->execute([$userId]);
+            $educadorId = $stmt->fetch()['id'] ?? null;
+            if (!$educadorId) {
+                throw new Exception('Educador não encontrado para atualização de especialidades.');
+            }
             
             // Remover especialidades antigas
             $stmt = $db->prepare("DELETE FROM educador_especialidades WHERE educador_id = ?");

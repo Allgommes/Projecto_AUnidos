@@ -29,28 +29,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $nome = sanitizeInput($_POST['nome']);
         $descricao = sanitizeInput($_POST['descricao']);
-        $preco = floatval($_POST['preco']);
+            // Usar preco_hora conforme schema
+            $preco_hora = floatval($_POST['preco']);
+            $preco_hora = $preco_hora > 0 ? number_format($preco_hora, 2, '.', '') : 0;
         $duracao = intval($_POST['duracao']);
         
-        if (empty($nome) || empty($descricao) || $preco < 0.01 || $duracao <= 0) {
+        if (empty($nome) || empty($descricao) || $preco_hora < 0.01 || $duracao <= 0) {
             $errors[] = 'Todos os campos são obrigatórios. O preço deve ser pelo menos €0.01 e a duração deve ser positiva.';
         } else {
             if (isset($_POST['servico_id']) && !empty($_POST['servico_id'])) {
                 // Editar serviço existente
-                $stmt = $db->prepare("
-                    UPDATE servicos 
-                    SET nome = ?, descricao = ?, preco = ?, duracao_minutos = ?
-                    WHERE id = ? AND educador_id = ?
-                ");
-                $stmt->execute([$nome, $descricao, $preco, $duracao, $_POST['servico_id'], $educadorId]);
+                    $stmt = $db->prepare("
+                        UPDATE servicos 
+                        SET nome = ?, descricao = ?, preco_hora = ?, duracao_minutos = ?
+                        WHERE id = ? AND educador_id = ?
+                    ");
+                    $stmt->execute([$nome, $descricao, $preco_hora, $duracao, (int)$_POST['servico_id'], $educadorId]);
                 $_SESSION['success_message'] = 'Serviço atualizado com sucesso!';
             } else {
                 // Criar novo serviço
-                $stmt = $db->prepare("
-                    INSERT INTO servicos (educador_id, nome, descricao, preco, duracao_minutos)
-                    VALUES (?, ?, ?, ?, ?)
-                ");
-                $stmt->execute([$educadorId, $nome, $descricao, $preco, $duracao]);
+                    $stmt = $db->prepare("
+                        INSERT INTO servicos (educador_id, nome, descricao, preco_hora, duracao_minutos)
+                        VALUES (?, ?, ?, ?, ?)
+                    ");
+                    $stmt->execute([$educadorId, $nome, $descricao, $preco_hora, $duracao]);
                 $_SESSION['success_message'] = 'Serviço criado com sucesso!';
             }
             $success = true;
@@ -80,7 +82,7 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 try {
     $db = getDB();
     $stmt = $db->prepare("
-        SELECT id, nome, descricao, preco, duracao_minutos, ativo
+           SELECT id, nome, descricao, preco_hora, duracao_minutos, ativo
         FROM servicos 
         WHERE educador_id = ?
         ORDER BY nome
@@ -97,7 +99,7 @@ if (isset($_GET['editar']) && is_numeric($_GET['editar'])) {
     try {
         $db = getDB();
         $stmt = $db->prepare("
-            SELECT id, nome, descricao, preco, duracao_minutos
+              SELECT id, nome, descricao, preco_hora, duracao_minutos
             FROM servicos 
             WHERE id = ? AND educador_id = ?
         ");
@@ -172,7 +174,7 @@ include 'includes/header.php';
                                     <div class="col-6">
                                         <label for="preco" class="form-label">Preço (€)</label>
                                         <input type="number" class="form-control" id="preco" name="preco" 
-                                               value="<?php echo $servicoEdicao ? $servicoEdicao['preco'] : ''; ?>" 
+                                               value="<?php echo $servicoEdicao ? $servicoEdicao['preco_hora'] : ''; ?>" 
                                                min="0.01" step="0.01" placeholder="Ex: 25.00" required>
                                     </div>
                                     <div class="col-6">
@@ -224,7 +226,7 @@ include 'includes/header.php';
                                                     <h6 class="mb-1 fw-bold"><?php echo htmlspecialchars($servico['nome']); ?></h6>
                                                     <p class="mb-2 text-muted small"><?php echo htmlspecialchars($servico['descricao']); ?></p>
                                                     <div class="d-flex gap-3">
-                                                        <span class="badge bg-success">€<?php echo number_format($servico['preco'], 0); ?></span>
+                                                        <span class="badge bg-success">€<?php echo number_format($servico['preco_hora'], 2); ?></span>
                                                         <span class="badge bg-info"><?php echo $servico['duracao_minutos']; ?> min</span>
                                                         <span class="badge <?php echo $servico['ativo'] ? 'bg-success' : 'bg-secondary'; ?>">
                                                             <?php echo $servico['ativo'] ? 'Ativo' : 'Inativo'; ?>
