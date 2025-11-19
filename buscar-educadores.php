@@ -154,8 +154,11 @@ include 'includes/header.php';
                     <div class="col-md-3">
                         <label for="especialidade" class="form-label">Especialidade</label>
                         <select class="form-select" id="especialidade" name="especialidade">
-                            <option value="">Todas as especialidades</option>
-                            <?php foreach ($todasEspecialidades as $esp): ?>
+                            <option value="">Todas as especialidades</option>                            
+                            <?php 
+                            $especialidade = ['Obediência Básica', 'Adestramento Avançado', 'Correção de Comportamento', 
+                                              'Treino de Agilidade', 'Socialização de Filhotes', 'Treino para Exposições'];
+                            foreach ($todasEspecialidades as $esp): ?>
                                 <option value="<?php echo $esp; ?>" <?php echo ($especialidade === $esp) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($esp); ?>
                                 </option>
