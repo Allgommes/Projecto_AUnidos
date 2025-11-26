@@ -27,8 +27,8 @@ function enviar_email($destinatario, $nome_destinatario, $assunto, $mensagem)
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'gomesalvarogomes@gmail.com';
-        $mail->Password   = 'mgtz foyz hsne xckb';
+        $mail->Username   = 'coloque um email';
+        $mail->Password   = 'password';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 587;
 
