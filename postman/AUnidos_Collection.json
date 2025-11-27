@@ -1,0 +1,501 @@
+{
+  "info": {
+    "name": "AUnidos - Plataforma de Educadores Caninos",
+    "description": "Coleção completa de testes para o projeto AUnidos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "1. Registar Dono",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@example.com\",\n  \"password\": \"senha123\",\n  \"tipo_utilizador\": \"dono\",\n  \"telefone\": \"912345678\",\n  \"distrito\": \"Lisboa\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/register.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "register.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Registar Educador",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Santos\",\n  \"email\": \"maria.santos@example.com\",\n  \"password\": \"senha123\",\n  \"tipo_utilizador\": \"educador\",\n  \"telefone\": \"918765432\",\n  \"distrito\": \"Porto\",\n  \"anos_experiencia\": 5,\n  \"biografia\": \"Educadora canina certificada com 5 anos de experiência.\",\n  \"certificacoes\": \"Certificado APECA, Curso Etologia Canina\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/register.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "register.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@example.com\",\n  \"password\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/login.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "login.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Verificar Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/verify-email.php?token={{verification_token}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "verify-email.php"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{verification_token}}",
+                  "description": "Token recebido no email"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Solicitar Reset de Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@example.com\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/forgot-password.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "forgot-password.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Reset de Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{reset_token}}\",\n  \"password\": \"novaSenha123\",\n  \"confirm_password\": \"novaSenha123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/reset-password.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "reset-password.php"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Educadores",
+      "item": [
+        {
+          "name": "1. Listar Todos Educadores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/educadores.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "educadores.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Buscar Educador por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/educadores.php?id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "educadores.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Buscar por Distrito",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/educadores.php?distrito=Lisboa",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "educadores.php"],
+              "query": [
+                {
+                  "key": "distrito",
+                  "value": "Lisboa"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Buscar por Especialidade",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/educadores.php?especialidade=Obediência Básica",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "educadores.php"],
+              "query": [
+                {
+                  "key": "especialidade",
+                  "value": "Obediência Básica"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Criar Educador",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"utilizador_id\": 5,\n  \"anos_experiencia\": 7,\n  \"biografia\": \"Especialista em comportamento canino\",\n  \"certificacoes\": \"APECA, Etologia Aplicada\",\n  \"foto_perfil\": \"educador5.jpg\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/educadores.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "educadores.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Atualizar Educador",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"anos_experiencia\": 8,\n  \"biografia\": \"Biografia atualizada\",\n  \"certificacoes\": \"Novas certificações\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/educadores.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "educadores.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Deletar Educador",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/educadores.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "educadores.php"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Serviços",
+      "item": [
+        {
+          "name": "1. Listar Todos Serviços",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/servicos.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "servicos.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Buscar Serviço por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/servicos.php?id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "servicos.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Criar Serviço",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"educador_id\": 1,\n  \"nome\": \"Treino de Obediência Básica\",\n  \"descricao\": \"Sessões de treino básico para cães de todas as idades\",\n  \"preco_hora\": 25.50,\n  \"duracao_minutos\": 60\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/servicos.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "servicos.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Atualizar Serviço",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"nome\": \"Treino Avançado\",\n  \"descricao\": \"Descrição atualizada\",\n  \"preco_hora\": 30.00,\n  \"duracao_minutos\": 90\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/servicos.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "servicos.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Deletar Serviço",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/servicos.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "servicos.php"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Utilizadores",
+      "item": [
+        {
+          "name": "1. Listar Todos Utilizadores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/users.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "users.php"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Buscar Utilizador por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/users.php?id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "users.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Buscar por Tipo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/users.php?tipo=educador",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "users.php"],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "educador"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Teste de Conexão",
+      "item": [
+        {
+          "name": "Testar Conexão BD",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/Projecto_AUnidos/api/test-connection.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["Projecto_AUnidos", "api", "test-connection.php"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost/Projecto_AUnidos",
+      "type": "string"
+    },
+    {
+      "key": "verification_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reset_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

@@ -30,7 +30,228 @@
 
 ### 5. **Reset de Password**
 - URL: http://localhost/Projecto_AUnidos/reset-password.php?token=TOKEN
-- ⚠️ Em desenvolvimento (arquivo corrompido - será corrigido)
+- ✅ Funcional com validação de token
+
+---
+
+## 📬 TESTES COM POSTMAN
+
+### 🚀 Importar Coleção no Postman
+
+#### Método 1: Importar JSON Diretamente
+1. Abra o Postman
+2. Clique em **"Import"** (canto superior esquerdo)
+3. Selecione **"Upload Files"**
+4. Navegue até `postman/AUnidos_Collection.json`
+5. Clique em **"Import"**
+
+#### Método 2: Copiar e Colar JSON
+1. No Postman, clique em **"Import"**
+2. Selecione a aba **"Raw text"**
+3. Cole o JSON da coleção (ver arquivo `postman/AUnidos_Collection.json`)
+4. Clique em **"Continue"** → **"Import"**
+
+---
+
+## 📋 ORDEM DE TESTES RECOMENDADA
+
+### 1️⃣ **PRIMEIRO: Testar Conexão**
+```http
+GET http://localhost/Projecto_AUnidos/api/test-connection.php
+```
+✅ Deve retornar estatísticas do banco de dados
+
+### 2️⃣ **Registar Utilizadores**
+
+**a) Registar Dono:**
+```http
+POST http://localhost/Projecto_AUnidos/register.php
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "joao.silva@example.com",
+  "password": "senha123",
+  "tipo_utilizador": "dono",
+  "telefone": "912345678",
+  "distrito": "Lisboa"
+}
+```
+
+**b) Registar Educador:**
+```http
+POST http://localhost/Projecto_AUnidos/register.php
+Content-Type: application/json
+
+{
+  "nome": "Maria Santos",
+  "email": "maria.santos@example.com",
+  "password": "senha123",
+  "tipo_utilizador": "educador",
+  "telefone": "918765432",
+  "distrito": "Porto",
+  "anos_experiencia": 5,
+  "biografia": "Educadora canina certificada",
+  "certificacoes": "APECA, Etologia Canina"
+}
+```
+
+### 3️⃣ **Verificar Email (Opcional)**
+```http
+GET http://localhost/Projecto_AUnidos/verify-email.php?token=SEU_TOKEN_AQUI
+```
+
+**Como obter o token:**
+```sql
+SELECT token_verificacao FROM utilizadores WHERE email = 'joao.silva@example.com';
+```
+
+### 4️⃣ **Fazer Login**
+```http
+POST http://localhost/Projecto_AUnidos/login.php
+Content-Type: application/json
+
+{
+  "email": "joao.silva@example.com",
+  "password": "senha123"
+}
+```
+
+### 5️⃣ **Recuperar Password**
+
+**a) Solicitar Reset:**
+```http
+POST http://localhost/Projecto_AUnidos/forgot-password.php
+Content-Type: application/json
+
+{
+  "email": "joao.silva@example.com"
+}
+```
+
+**b) Reset Password:**
+```http
+POST http://localhost/Projecto_AUnidos/reset-password.php
+Content-Type: application/json
+
+{
+  "token": "TOKEN_DO_EMAIL",
+  "password": "novaSenha123",
+  "confirm_password": "novaSenha123"
+}
+```
+
+---
+
+## 🎯 TESTES DE API (Educadores e Serviços)
+
+### **Educadores**
+
+**1. Listar Todos:**
+```http
+GET http://localhost/Projecto_AUnidos/api/educadores.php
+```
+
+**2. Buscar por ID:**
+```http
+GET http://localhost/Projecto_AUnidos/api/educadores.php?id=1
+```
+
+**3. Buscar por Distrito:**
+```http
+GET http://localhost/Projecto_AUnidos/api/educadores.php?distrito=Lisboa
+```
+
+**4. Buscar por Especialidade:**
+```http
+GET http://localhost/Projecto_AUnidos/api/educadores.php?especialidade=Obediência Básica
+```
+
+**5. Criar Educador:**
+```http
+POST http://localhost/Projecto_AUnidos/api/educadores.php
+Content-Type: application/json
+
+{
+  "utilizador_id": 5,
+  "anos_experiencia": 7,
+  "biografia": "Especialista em comportamento canino",
+  "certificacoes": "APECA, Etologia Aplicada"
+}
+```
+
+**6. Atualizar Educador:**
+```http
+PUT http://localhost/Projecto_AUnidos/api/educadores.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "anos_experiencia": 8,
+  "biografia": "Biografia atualizada",
+  "certificacoes": "Novas certificações"
+}
+```
+
+**7. Deletar Educador:**
+```http
+DELETE http://localhost/Projecto_AUnidos/api/educadores.php
+Content-Type: application/json
+
+{
+  "id": 1
+}
+```
+
+### **Serviços**
+
+**1. Listar Todos:**
+```http
+GET http://localhost/Projecto_AUnidos/api/servicos.php
+```
+
+**2. Buscar por ID:**
+```http
+GET http://localhost/Projecto_AUnidos/api/servicos.php?id=1
+```
+
+**3. Criar Serviço:**
+```http
+POST http://localhost/Projecto_AUnidos/api/servicos.php
+Content-Type: application/json
+
+{
+  "educador_id": 1,
+  "nome": "Treino de Obediência Básica",
+  "descricao": "Sessões de treino básico para cães de todas as idades",
+  "preco_hora": 25.50,
+  "duracao_minutos": 60
+}
+```
+
+**4. Atualizar Serviço:**
+```http
+PUT http://localhost/Projecto_AUnidos/api/servicos.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nome": "Treino Avançado",
+  "descricao": "Descrição atualizada",
+  "preco_hora": 30.00,
+  "duracao_minutos": 90
+}
+```
+
+**5. Deletar Serviço:**
+```http
+DELETE http://localhost/Projecto_AUnidos/api/servicos.php
+Content-Type: application/json
+
+{
+  "id": 1
+}
+```
 
 ---
 
@@ -59,7 +280,7 @@ MAIL_FROM_NAME=AUnidos
 
 ## 🧪 TESTE MANUAL - Passo a Passo
 
-### Teste 1: Registo Completo
+### Teste 1: Registo Completo (Browser)
 
 ```powershell
 # 1. Abrir página de registo
